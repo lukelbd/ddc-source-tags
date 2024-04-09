@@ -1,12 +1,8 @@
 import { Denops, fn } from "https://deno.land/x/ddc_vim@v4.0.5/deps.ts#^";
 import { readLines } from "https://deno.land/std@0.221.0/io/read_lines.ts";
 import { exists } from "https://deno.land/std@0.221.0/fs/mod.ts#^";
-import {
-  GatherArguments
-} from "https://deno.land/x/ddc_vim@v4.0.5/base/source.ts#^";
-import {
-  BaseSource, Candidate
-} from "https://deno.land/x/ddc_vim@v4.0.5/types.ts#^";
+import { GatherArguments } from "https://deno.land/x/ddc_vim@v4.0.5/base/source.ts#^";
+import { BaseSource, Candidate } from "https://deno.land/x/ddc_vim@v4.0.5/types.ts#^";
 
 type Params = {
   cmd: string[];
@@ -32,7 +28,7 @@ export class Source extends BaseSource<Params> {
     const files = await fn.tagfiles(args.denops);
     const str = args.completeStr.replaceAll(/([\\\[\]^$.*])/g, "\\$1");
     const max = Math.max(1, Math.min(args.sourceParams.maxSize, 2000));
-    let cmd = args.sourceParams.cmd
+    let cmd = args.sourceParams.cmd;
     cmd = cmd.map((s) => s.replace("{PLACEHOLDER}", str));
     cmd = cmd.concat(["--max-count", max.toString()]);
 
@@ -71,8 +67,8 @@ export class Source extends BaseSource<Params> {
       if (parts.length < 4) continue;
       const candidate = {
         word: split(parts[0], ":"),
+        kind: split(parts[3], ":"),
         menu: parts[1],
-        kind: split(parts[3], ":")
       };
       candidates.push(candidate);
     }
