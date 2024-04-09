@@ -35,10 +35,13 @@ export class Source extends BaseSource<Params> {
     // Run commands
     const lines = [];
     const paths = [];
+    const current = await fn.expand(args.denops, "%:p")
     for (const file of files) {
       if (lines.length >= max) break;
+      const base = await fn.fnamemodify(args.denops, file, ":p:h")
       const path = await fn.fnamemodify(args.denops, file, ":p");
       const isfile = await exists(path);
+      if (!current.startsWith(base)) continue;
       if (isfile === null || paths.includes(path)) continue;
       const proc = new Deno.Command(
         cmd[0], {
