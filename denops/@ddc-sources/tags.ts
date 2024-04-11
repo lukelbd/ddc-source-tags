@@ -35,14 +35,16 @@ export class Source extends BaseSource<Params> {
     // Run commands
     const lines = [];
     const paths = [];
-    const current = await fn.expand(args.denops, "%:p")
+    const active = await fn.expand(args.denops, "%:p")
+    const decoder = new TextDecoder()
     for (const file of files) {
       if (lines.length >= max) break;
       const base = await fn.fnamemodify(args.denops, file, ":p:h")
+      if (!active.startsWith(base)) continue;
       const path = await fn.fnamemodify(args.denops, file, ":p");
+      if (paths.includes(path)) continue;
       const isfile = await exists(path);
-      if (!current.startsWith(base)) continue;
-      if (isfile === null || paths.includes(path)) continue;
+      if (isfile === null) continue;
       const proc = new Deno.Command(
         cmd[0], {
           args: [...cmd.slice(1), path],
@@ -51,7 +53,7 @@ export class Source extends BaseSource<Params> {
           stderr: "piped",
         });
       const { stdout } = await proc.output();
-      lines.push(...new TextDecoder().decode(stdout).split(/\r?\n/));
+      lines.push(...decoder.decode(stdout).split(/\r?\n/));
       paths.push(path);
     }
 
