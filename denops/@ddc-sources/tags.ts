@@ -20,7 +20,7 @@ class LangSource {
   }
   async add(denops: Denops, path: string): void {
     if (path.length == 0) return "";
-    const decoder = new TextDecoder()
+    const decoder = new TextDecoder();
     const proc = new Deno.Command(
       "ctags", {
         args: ["--print-language", path],
@@ -91,7 +91,6 @@ export class Source extends BaseSource<Params> {
     cmd = cmd.map((s) => s.replace("{PLACEHOLDER}", str));
     cmd = cmd.concat(["--max-count", max.toString()]);
 
-
     // Run commands
     const lines = [];
     const reads = [];
@@ -124,7 +123,7 @@ export class Source extends BaseSource<Params> {
       if (candidates.length >= max) break;
       const parts = line.split("\t");
       if (parts.length < 5) continue;
-      const word = parts[0].split(":").pop() || parts[0]
+      const word = parts[0];
       const path = await join(parts.pop(), parts[1]);
       const menu = await basename(parts[1]);
       const lang = await this.langs.get(args.denops, path);
