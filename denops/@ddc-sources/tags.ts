@@ -11,16 +11,16 @@ type Params = {
 };
 
 export class Source extends BaseSource<Params> {
-  private async printError(denops: Denops, message: string): Promise<void> {
-    await denops.call("ddc#util#print_error", message, "tags");
-  }
-
   params(): Params {
     return {
       cmd: ["rg", "^{PLACEHOLDER}[_A-Za-z0-9:-]*\t", "--color=never"],
       args: [],
       maxSize: 100,
     };
+  }
+
+  async message(denops: Denops, message: string): Promise<void> {
+    await denops.call("ddc#util#print_error", message, "tags");
   }
 
   async gather(args: GatherArguments<Params>): Promise<Candidate[]> {
@@ -70,12 +70,10 @@ export class Source extends BaseSource<Params> {
       if (candidates.length >= max) break;
       const parts = line.split("\t");
       if (parts.length < 4) continue;
-      const candidate = {
-        word: split(parts[0], ":"),
-        kind: split(parts[3], ":"),
-        menu: parts[1],
-      };
-      candidates.push(candidate);
+      const menu = parts[1].replace(/^.*\//g, "");
+      const word = split(parts[0], ":");
+      const kind = split(parts[3], ":");
+      candidates.push({word: word, kind: kind, menu: menu});
     }
     return candidates;
   }
