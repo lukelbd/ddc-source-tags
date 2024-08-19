@@ -6,7 +6,7 @@ popup completion with tag file entries (requires [denops.vim](https://github.com
 
 To configure add the following to your `~/.vimrc`:
 
-```
+```vim
 call ddc#custom#patch_global('sources', ['tags'])
 call ddc#custom#patch_global('sourceParams', {'tags': {'maxSize': 100, ...}})
 ```

@@ -82,8 +82,8 @@ export class Source extends BaseSource<Params> {
 
   async gather(args: GatherArguments<Params>): Promise<Candidate[]> {
     // Parse parameters
-    const current = await fn.expand(args.denops, "%:p")
-    const files = await fn.tagfiles(args.denops)
+    const current = await fn.expand(args.denops, "%:p");
+    const files = await fn.tagfiles(args.denops);
     const paths = await fn.map(args.denops, files, "fnamemodify(v:val, ':p')");
     const str = args.completeStr.replaceAll(/([\\\[\]^$.*])/g, "\\$1");
     const max = Math.max(1, Math.min(args.sourceParams.maxSize, 2000));
@@ -94,7 +94,7 @@ export class Source extends BaseSource<Params> {
     // Run commands
     const lines = [];
     const reads = [];
-    const decoder = new TextDecoder()
+    const decoder = new TextDecoder();
     for (const path of paths) {
       if (lines.length >= max) break;
       if (reads.includes(path)) continue;
